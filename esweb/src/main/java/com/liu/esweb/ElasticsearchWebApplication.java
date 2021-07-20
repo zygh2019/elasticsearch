@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author shengbinliu
  */
 @SpringBootApplication
-public class EsWebApplication {
+public class ElasticsearchWebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EsWebApplication.class, args);
+        SpringApplication.run(ElasticsearchWebApplication.class, args);
     }
 
 }
