@@ -69,7 +69,7 @@ public class GoodsServiceImpl implements GoodsService {
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
         //模糊查询
 
-        boolQueryBuilder.filter(QueryBuilders.termQuery("name", queryPO.getName()));
+        boolQueryBuilder.filter(QueryBuilders.wildcardQuery("name", "*".concat(queryPO.getName()).concat("*")));
         PageRequest pageRequest = PageRequest.of(pageReq.getPage() - 1, pageReq.getSize());
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
