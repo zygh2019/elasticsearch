@@ -2,20 +2,22 @@ package com.liu.esweb.controller.goods;
 
 
 import com.liu.esweb.bean.goods.Goods;
+import com.liu.esweb.common.pojo.PageReq;
+import com.liu.esweb.common.pojo.po.query.goods.GoodsQueryPO;
 import com.liu.esweb.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * @author shengbinliu
  */
-@Controller
+@RestController
 public class GoodsController {
 
     @Autowired
@@ -38,5 +40,18 @@ public class GoodsController {
         System.out.println(book);
         goodsService.save(book);
     }
+    @RequestMapping("/findAll")
+    @ResponseBody
+    public List<Goods> findAll(){
 
+        return goodsService.findAll();
+    }
+
+
+    @RequestMapping("/findPage")
+    @ResponseBody
+    public List<Goods> findPage(PageReq<GoodsQueryPO> pageRequest){
+
+        return goodsService.findPage(pageRequest);
+    }
 }

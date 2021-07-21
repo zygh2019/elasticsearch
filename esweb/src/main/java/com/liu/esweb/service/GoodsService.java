@@ -1,6 +1,8 @@
 package com.liu.esweb.service;
 
 import com.liu.esweb.bean.goods.Goods;
+import com.liu.esweb.common.pojo.PageReq;
+import com.liu.esweb.common.pojo.po.query.goods.GoodsQueryPO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -19,7 +21,6 @@ public interface GoodsService {
 
     List<Goods> findAll();
 
-    Page<Goods> findByAuthor(String author, PageRequest pageRequest);
 
-    Page<Goods> findByTitle(String title, PageRequest pageRequest);
+    List<Goods> findPage(PageReq<GoodsQueryPO> pageRequest);
 }

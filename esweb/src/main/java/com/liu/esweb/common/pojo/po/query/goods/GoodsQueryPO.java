@@ -1,4 +1,4 @@
-package com.liu.esweb.bean.goods;
+package com.liu.esweb.common.pojo.po.query.goods;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,22 +16,14 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@Document(indexName = "store-goods", createIndex = true)
-public class Goods {
+public class GoodsQueryPO {
 
-    @Id
-    private String id;
-
-    @Field(type = FieldType.Keyword)
     private String name;
 
-    @Field(type = FieldType.Keyword)
     private String introduce;
 
-    @Field(type = FieldType.Double)
     private Double price;
 
-    @Field(type = FieldType.Integer)
     private Integer count;
 
 

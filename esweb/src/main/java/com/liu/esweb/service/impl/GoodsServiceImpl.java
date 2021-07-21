@@ -1,23 +1,34 @@
 package com.liu.esweb.service.impl;
 
 import com.liu.esweb.bean.goods.Goods;
+import com.liu.esweb.common.pojo.PageReq;
+import com.liu.esweb.common.pojo.po.query.goods.GoodsQueryPO;
 import com.liu.esweb.repository.goods.GoodsRepository;
 import com.liu.esweb.service.GoodsService;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
     @Autowired
     @Qualifier("goodsRepository")
     private GoodsRepository goodsRepository;
-
+    @Autowired
+    ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     @Override
     public Optional<Goods> findById(String id) {
@@ -42,26 +53,31 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public List<Goods> findAll() {
-        return (List<Goods>) goodsRepository.findAll();
+        Iterable<Goods> all = goodsRepository.findAll();
+        List<Goods> copy = new ArrayList<>();
+        all.forEach(o -> copy.add(o));
+        return copy;
     }
+
 
     @Override
-    public Page<Goods> findByAuthor(String author, PageRequest pageRequest) {
-        return null;
+    public List<Goods> findPage(PageReq<GoodsQueryPO> pageReq) {
+        GoodsQueryPO queryPO = pageReq.getQueryPO();
+        if (Objects.isNull(queryPO)) {
+        }
+
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
+        //模糊查询
+
+        boolQueryBuilder.filter(QueryBuilders.termQuery("name", queryPO.getName()));
+        PageRequest pageRequest = PageRequest.of(pageReq.getPage() - 1, pageReq.getSize());
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(boolQueryBuilder)
+                .withPageable(pageRequest).build();
+        SearchHits<Goods> search = elasticsearchRestTemplate.search(searchQuery, Goods.class);
+        return search.stream().map(goodsSearchHit -> {
+            return goodsSearchHit.getContent();
+        }).collect(Collectors.toList());
     }
 
-    @Override
-    public Page<Goods> findByTitle(String title, PageRequest pageRequest) {
-        return null;
-    }
-
-//    @Override
-//    public Page<Goods> findByAuthor(String author, PageRequest pageRequest) {
-//        return goodsRepository.findByAuthor(author, pageRequest);
-//    }
-//
-//    @Override
-//    public Page<Goods> findByTitle(String title, PageRequest pageRequest) {
-//        return goodsRepository.findByTitle(title, pageRequest);
-//    }
 }
